@@ -6,15 +6,15 @@ function Cammi() {
   const [currentText, setCurrentText] = useState("");
   const videoRef = useRef(null);
 
-  const listaMensajes = [
-    "ALERTA: Cámara activada...",
-    "Procesando datos del usuario...",
-    "Porfavor, sonría",
-    "Registro completado. Monitorizando...",
-    "Gracias ¡Que tenga un buen día!",
-  ];
-
   useEffect(() => {
+    const listaMensajes = [
+      "ALERTA: Cámara activada...",
+      "Procesando datos del usuario...",
+      "Porfavor, sonría",
+      "Registro completado. Monitorizando...",
+      "Gracias ¡Que tenga un buen día!",
+    ];
+
     let timeouts = [];
 
     const escribirMensajes = async () => {
@@ -31,7 +31,7 @@ function Cammi() {
         setMensajes((prev) => [...prev, msg]);
         setCurrentText("");
         await new Promise((res) => {
-          const t = setTimeout(res, 500); // espera antes del siguiente mensaje
+          const t = setTimeout(res, 500);
           timeouts.push(t);
         });
       }
@@ -39,9 +39,7 @@ function Cammi() {
 
     const activarCamara = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         if (videoRef.current) videoRef.current.srcObject = stream;
         setCamActive(true);
         escribirMensajes();
@@ -54,8 +52,8 @@ function Cammi() {
     const timer = setTimeout(activarCamara, 1000);
     timeouts.push(timer);
 
-    return () => timeouts.forEach((t) => clearTimeout(t)); // Limpieza de todos los timers
-  }, []);
+    return () => timeouts.forEach((t) => clearTimeout(t));
+  }, []); // ✅ Ahora el array de dependencias puede quedar vacío sin advertencias
 
   return (
     <div
